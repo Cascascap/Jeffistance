@@ -41,7 +41,7 @@ namespace Jeffistance.Models
 
         public Permissions Perms { get; set; }
 
-        public ViewModelBase CurrenWindow {get; set; }
+        public ViewModelBase CurrentWindow {get; set; }
 
         public User(string username)
         {
