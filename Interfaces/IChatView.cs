@@ -1,5 +1,5 @@
 interface IChatView
 {
   string Log { get; }
-  void WriteLineInLog();
+  void WriteLineInLog(string msg);
 }
