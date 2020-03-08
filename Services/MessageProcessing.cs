@@ -68,7 +68,7 @@ namespace Jeffistance.Services.MessageProcessing
         {
             User currentUser = GameState.GetGameState().CurrentUser;
             ChatViewModel chatWindow = ((LobbyViewModel) currentUser.CurrentWindow).ChatView;
-            chatWindow.WriteLineInLog();    
+            chatWindow.WriteLineInLog(message.Text);    
             /*
             else if(currentUser.CurrenWindow is GameViewModel)
             {

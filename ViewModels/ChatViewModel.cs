@@ -34,12 +34,12 @@ namespace Jeffistance.ViewModels
             MessageContent = user.Name + ": " + MessageContent;
             Message chatText = new Message(MessageContent, JeffistanceFlags.Chat, JeffistanceFlags.Broadcast);
             user.Send(chatText);
+            this.MessageContent = "";
         }
 
-        public void WriteLineInLog()
+        public void WriteLineInLog(string msg)
         {
-            this.Log = this.Log + this.MessageContent + "\n";
-            this.MessageContent = "";
+            this.Log = this.Log + msg + "\n";
         }
 
     }
