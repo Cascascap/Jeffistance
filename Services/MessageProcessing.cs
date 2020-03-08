@@ -67,11 +67,8 @@ namespace Jeffistance.Services.MessageProcessing
         private void ChatFlagMethod(Message message)
         {
             User currentUser = GameState.GetGameState().CurrentUser;
-            if(currentUser.CurrentWindow is LobbyViewModel)
-            {
-                ChatViewModel chatWindow = ((LobbyViewModel) currentUser.CurrentWindow).ChatView;
-                
-            }
+            ChatViewModel chatWindow = ((LobbyViewModel) currentUser.CurrentWindow).ChatView;
+            chatWindow.WriteLineInLog();    
             /*
             else if(currentUser.CurrenWindow is GameViewModel)
             {

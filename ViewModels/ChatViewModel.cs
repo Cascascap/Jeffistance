@@ -9,7 +9,7 @@ using Jeffistance.Services.MessageProcessing;
 
 namespace Jeffistance.ViewModels
 {
-    public class ChatViewModel : ViewModelBase
+    public class ChatViewModel : ViewModelBase, IChatView 
     {
         public ChatViewModel()
         {
@@ -18,7 +18,7 @@ namespace Jeffistance.ViewModels
         string messageContent;
         string chatLog;
 
-        public string ChatLog
+        public string Log
         {
             get => chatLog;
             set => this.RaiseAndSetIfChanged(ref chatLog, value);
@@ -38,7 +38,7 @@ namespace Jeffistance.ViewModels
 
         public void WriteLineInLog()
         {
-            this.ChatLog = this.ChatLog + this.MessageContent + "\n";
+            this.Log = this.Log + this.MessageContent + "\n";
             this.MessageContent = "";
         }
 
