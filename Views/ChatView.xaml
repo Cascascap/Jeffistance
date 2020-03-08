@@ -5,15 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Jeffistance.Views.ChatView">
   <Grid ColumnDefinitions="8*,2*" RowDefinitions="9*,0.5*" Margin="4">
-    <ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Items="{Binding Messages}">
-      <ListBox.ItemTemplate>
-        <DataTemplate>
-          <TextBlock Text="{Binding Message}"/>
-        </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
-    <TextBox AcceptsReturn="False" Grid.Row="1" Grid.Column="0" Text="{Binding MessageContent}">
-    </TextBox> 
+    <TextBox AcceptsReturn="False" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" IsEnabled="False" Text="{Binding ChatLog}"/>
+    <TextBox AcceptsReturn="False" Grid.Row="1" Grid.Column="0" Text="{Binding MessageContent}"/>
     <Button Grid.Row="1" Grid.Column="1" Command="{Binding OnSendClicked}" IsDefault="True">Send</Button>
   </Grid>
 </UserControl>

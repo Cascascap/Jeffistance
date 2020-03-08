@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Jeffistance.Models;
 using Jeffistance.Services.Messaging;
+using Jeffistance.ViewModels;
 
 namespace Jeffistance.Services.MessageProcessing
 {
@@ -11,7 +12,8 @@ namespace Jeffistance.Services.MessageProcessing
     {
         Greeting = 1,
         Broadcast = 2,
-        Update = 4
+        Update = 4,
+        Chat = 8
     }
 
     public class MessageProcessor
@@ -60,5 +62,22 @@ namespace Jeffistance.Services.MessageProcessing
                 pi.SetValue(currentUser, obj);
             }
         }
+
+        [MessageMethod("Chat")]
+        private void ChatFlagMethod(Message message)
+        {
+            User currentUser = GameState.GetGameState().CurrentUser;
+            if(currentUser.CurrenWindow is LobbyViewModel)
+            {
+                ChatViewModel chatWindow = ((LobbyViewModel) currentUser.CurrenWindow).ChatView;
+                
+            }
+            /*
+            else if(currentUser.CurrenWindow is GameViewModel)
+            {
+
+            }
+            */
+        }
     }
-}
+}   

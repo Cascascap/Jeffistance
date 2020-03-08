@@ -20,12 +20,11 @@ namespace Jeffistance.ViewModels
         }
         MainWindowViewModel parent;
         ChatViewModel chatView;
-        ChatViewModel ChatView 
+        public ChatViewModel ChatView 
         {
             get => chatView;
             set => this.RaiseAndSetIfChanged(ref chatView, value);
         }
-        
 
         public LobbyViewModel(MainWindowViewModel parent)
         {

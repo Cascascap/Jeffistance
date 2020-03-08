@@ -4,6 +4,8 @@ using Jeffistance.Models;
 using System;
 using Avalonia.Controls;
 using ReactiveUI;
+using Jeffistance.Services.Messaging;
+using Jeffistance.Services.MessageProcessing;
 
 namespace Jeffistance.ViewModels
 {
@@ -11,11 +13,16 @@ namespace Jeffistance.ViewModels
     {
         public ChatViewModel()
         {
-            Items = new ObservableCollection<ChatMessage>();
         }
 
-        public ObservableCollection<ChatMessage> Items { get; }
         string messageContent;
+        string chatLog;
+
+        public string ChatLog
+        {
+            get => chatLog;
+            set => this.RaiseAndSetIfChanged(ref chatLog, value);
+        }
         public string MessageContent {
             get => messageContent;
             set => this.RaiseAndSetIfChanged(ref messageContent, value);
@@ -23,8 +30,16 @@ namespace Jeffistance.ViewModels
 
         public void OnSendClicked()
         {
-            Console.WriteLine(MessageContent);
-            MessageContent = "";
+            User user = GameState.GetGameState().CurrentUser;
+            MessageContent = user.Name + ": " + MessageContent;
+            Message chatText = new Message(MessageContent, JeffistanceFlags.Chat, JeffistanceFlags.Broadcast);
+            user.Send(chatText);
+        }
+
+        public void WriteLineInLog()
+        {
+            this.ChatLog = this.ChatLog + this.MessageContent + "\n";
+            this.MessageContent = "";
         }
 
     }

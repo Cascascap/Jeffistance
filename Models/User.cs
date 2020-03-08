@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Jeffistance.Services;
 using Jeffistance.Services.Messaging;
 using Jeffistance.Services.MessageProcessing;
+using Jeffistance.ViewModels;
 
 namespace Jeffistance.Models
 {
@@ -39,6 +40,8 @@ namespace Jeffistance.Models
         public MessageProcessor Processor { get; }
 
         public Permissions Perms { get; set; }
+
+        public ViewModelBase CurrenWindow {get; set; }
 
         public User(string username)
         {
