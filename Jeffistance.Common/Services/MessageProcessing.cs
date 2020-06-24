@@ -5,6 +5,7 @@ using ModusOperandi.Networking;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Jeffistance.Common.Services.IoC;
 
 namespace Jeffistance.Common.Services.MessageProcessing
 {
@@ -66,6 +67,12 @@ namespace Jeffistance.Common.Services.MessageProcessing
                 (object obj, string name) = (ValueTuple<object, string>) result;
                 messageToLog += $" {name}";
             }
+            messageToLog += "\nFlags:";
+
+            foreach (var flag in message.GetFlags())
+            {
+                messageToLog += $" {Enum.GetName(typeof(JeffistanceFlags), flag)}";
+            }
 
             logger.LogDebug(messageToLog);
         }
@@ -113,7 +120,15 @@ namespace Jeffistance.Common.Services.MessageProcessing
 
         public void Send(Message message)
         {
-            ClientConnection?.Send(message);
+            try
+            {
+                ClientConnection?.Send(message);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                var logger = IoCManager.GetClientLogger();
+                logger.LogError("Message failed to send.", ex);
+            }
         }
 
         public void Send(string message)
