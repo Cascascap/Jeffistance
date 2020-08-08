@@ -5,7 +5,6 @@ using System.Reactive;
 using Avalonia.Threading;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using Jeffistance.Client.Models;
 using Jeffistance.Common.Models;
 using Jeffistance.Common.Services.IoC;
@@ -19,10 +18,10 @@ namespace Jeffistance.Client.ViewModels
     {
         public ObservableCollection<User> Users { get; }
         public List<Guid> ReadyUserIDs { get; }
-        bool showKickButton;
-        bool showReadyButton;
-        bool showStartButton;
-        bool canStart;
+        private bool showKickButton;
+        private bool showReadyButton;
+        private bool showStartButton;
+        private bool canStart;
 
         public bool ShowKickButton
         {
@@ -70,7 +69,6 @@ namespace Jeffistance.Client.ViewModels
 
             gs.UserList = new List<User>();
             Users = new ObservableCollection<User>(gs.UserList);
-            Users.CollectionChanged += UsersUpdated;
             ReadyUserIDs = new List<Guid>();
 
             gs.PropertyChanged += OnAppStatePropertyChanged;
@@ -109,23 +107,10 @@ namespace Jeffistance.Client.ViewModels
         private void OnReadyClicked()
         {
             var user = AppState.GetAppState().CurrentUser;
-            string messageText = "";
-            if (ReadyUserIDs.Contains(user.ID))
-            {
-                messageText = $"{user.Name} is no longer ready.";
-            }
-            else
-            {
-                messageText = $"{user.Name} is now ready.";
-            }
 
             var messageFactory = IoCManager.Resolve<IClientMessageFactory>();
             // Send ready message
             var message = messageFactory.MakeLobbyReadyMessage(user.ID);
-            user.Send(message);
-
-            // Send user ready state to chat
-            message = messageFactory.MakeChatMessage(messageText);
             user.Send(message);
         }
 
@@ -139,24 +124,11 @@ namespace Jeffistance.Client.ViewModels
             {
                 ReadyUserIDs.Add(userID);
             }
-            if (AppState.GetAppState().CurrentUser.IsHost)
-            {
-                Dispatcher.UIThread.Post(CheckIfAllReady);
-            }
         }
 
-        private void CheckIfAllReady()
+        public void OnEveryoneReadyStateChange(bool ready)
         {
-            User currentUser = (User)AppState.GetAppState().CurrentUser;
-            if (Users.Where((u, i) => u.ID != currentUser.ID)
-                .All(user => ReadyUserIDs.Contains(user.ID)))
-            {
-                CanStart = true;
-            }
-            else
-            {
-                CanStart = false;
-            }
+            Dispatcher.UIThread.Post(() => CanStart = ready);
         }
 
         private void OnStartClicked()
@@ -173,32 +145,8 @@ namespace Jeffistance.Client.ViewModels
         {
             AppState gs = AppState.GetAppState();
             GameScreenViewModel gameScreen = new GameScreenViewModel();
-            parent.Content = gameScreen;
             gs.CurrentWindow = gameScreen;
-        }
-
-        public void SetupGame()
-        {
-            AppState gs = AppState.GetAppState();
-            if(gs.CurrentUser.IsHost)
-            {
-                List<User> Users = gs.UserList;
-                AppState apps = AppState.GetAppState();
-                Server server = apps.Server;
-                LocalUser me = apps.CurrentUser;
-                server.StartGame(Users);
-                var messageFactory = IoCManager.Resolve<IClientMessageFactory>();
-                var message = messageFactory.MakeGetPlayerInfoMessage(server.Game.Players);
-                me.Send(message);
-            }
-        }
-
-        private void UsersUpdated(object obj, NotifyCollectionChangedEventArgs args)
-        {
-            if (AppState.GetAppState().CurrentUser.IsHost)
-            {
-                Dispatcher.UIThread.Post(CheckIfAllReady);
-            }
+            parent.Content = gameScreen;
         }
     }
 }

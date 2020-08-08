@@ -16,21 +16,16 @@ namespace Jeffistance.Common.Services.MessageProcessing
         Greeting = 1 << 0,
         Update = 1 << 2,
         Chat = 1 << 3,
-        LobbyReady = 1 << 4,    
+        LobbyReady = 1 << 4,
         EditChatMessage = 1 << 5,
         DeleteChatMessage = 1 << 6,
         JoinGameMessage = 1 << 7,
-        GetPlayerInfoMessage = 1 << 8,
-        GamePhaseReadyMessage = 1 << 9,
-        AdvanceGamePhaseMessage = 1 << 10,
-        PickTeamMessage = 1 << 11,
-        DeclareLeaderMessage = 1 << 12,
-        VoteMessage = 1 << 13,
-        StartMissionVotingMessage = 1 << 14,
-        ShowTeamVoteResultMessage = 1 << 15,
-        MissionVoteMessage = 1 << 16,
-        ShowMissionResultMessage = 1 << 17,
-        EndGameMessage = 1 << 18,
+        GamePhaseReadyMessage = 1 << 8,
+        PickTeamMessage = 1 << 9,
+        VoteMessage = 1 << 10,
+        MissionVoteMessage = 1 << 11,
+        EveryoneReadyStateMessage = 1 << 12,
+        GameStateUpdateMessage = 1 << 13
     }
 
     public class JeffistanceMessageProcessor : MessageProcessor<JeffistanceFlags>
@@ -124,10 +119,10 @@ namespace Jeffistance.Common.Services.MessageProcessing
             {
                 ClientConnection?.Send(message);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException e)
             {
                 var logger = IoCManager.GetClientLogger();
-                logger.LogError("Message failed to send.", ex);
+                logger.LogError(message: "Message failed to send.", exception: e);
             }
         }
 
